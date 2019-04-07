@@ -49,10 +49,10 @@ do
             # [ -d "$targetdir" ] || exit 4
             ;;
         i)
-            suffix=$(date --iso-8601=${OPTARG}) || exit 3
+            suffix=$(date --iso-8601=${OPTARG}) || exit 2
             ;;
         f)
-            suffix=$(date +${OPTARG}) || exit 3
+            suffix=$(date +${OPTARG}) || exit 2
             ;;
         s)
             suffix=${OPTARG}
@@ -60,7 +60,7 @@ do
         *)
             echo
             usage
-            exit 2
+            exit 1
             ;;
     esac
 done
