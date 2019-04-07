@@ -1,0 +1,97 @@
+#!/bin/bash
+
+version="0.1"
+cpoptions="-ar"
+suffix=$(date --iso-8601=seconds)
+dryrun=false
+targetdir=""
+
+usage() {
+    echo "Usage: $0 [-h] [-d] [-v] [-V] [-i ISOFORMAT] [-f FORMAT] [-s SUFFIX] SRC"
+    echo "  -h  Help. Display this message and quit."
+    echo "  -d  Dry-run.  The cp command will only be echoed."
+    echo "  -v  Verbose. Pass '-v' option to 'cp'."
+    echo "  -t  Specify target directory."
+    echo "  -V  Version. Print version number and quit."
+    echo "  -i  Specify ISO time format passed to date; default is 'seconds'."
+    echo "  -f  Specify time format passed to date."
+    echo "  -s  Specify a different suffix for target."
+    echo "  SRC File or directory to be copied."
+    exit
+}
+
+# show usage when no options are given
+[ "$#" -eq 0 ] && usage && exit 1
+
+# define how and if cp should be executed
+OPTIND=1
+optspec="hdvt:Vi:f:s:"
+while getopts "$optspec" optchar
+do
+    case "${optchar}" in
+        h)
+            usage
+            exit
+            ;;
+        d)
+            dryrun=true
+            ;;
+        v)
+            cpoptions="${cpoptions}v"
+            ;;
+        t)
+            targetdir=${OPTARG}
+            # just use the exit status of cp
+            # [ -d "$targetdir" ] || exit 4
+            ;;
+        V)
+            echo ${version}
+            exit
+            ;;
+        i)
+            suffix=$(date --iso-8601=${OPTARG}) || exit 3
+            ;;
+        f)
+            suffix=$(date +${OPTARG}) || exit 3
+            ;;
+        s)
+            suffix=${OPTARG}
+            ;;
+        *)
+            echo
+            usage
+            exit 2
+            ;;
+    esac
+done
+
+# execute cp command on all given files/directories
+shift $(($OPTIND - 1))
+while [ -n "$1" ]
+do
+    # test if target directory is set
+    if [ ${targetdir} ]
+    then
+        target="${targetdir}/$(basename ${1})"
+    else
+        target=${1}
+    fi
+
+    if [ $dryrun = true ]
+    then
+        echo "cp ${cpoptions} ${target} ${target}.${suffix}"
+    else
+        cp ${cpoptions} ${target} ${target}.${suffix}
+    fi
+    shift
+done
+
+
+# todo:
+#  [x] called with no options
+#  [x] use it with *
+#  [ ] permissions?
+#  [ ] "baku ."
+#  [x] set target
+#  [x] catch possible errors in suffix generation
+#  [ ] order of options
