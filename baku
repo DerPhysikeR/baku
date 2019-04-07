@@ -85,15 +85,3 @@ do
     fi
     shift
 done
-
-
-# todo:
-#  [x] called with no options
-#  [x] use it with *
-#  [ ] permissions?
-#  [x] "baku ."
-#  [x] set target
-#  [x] catch possible errors in suffix generation
-#  [x] order of options
-#  [x] remove trailing slash from target directory; according to POSIX standard,
-#      this is not necessary
