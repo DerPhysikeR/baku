@@ -4,7 +4,7 @@ This script creates ISO-8601 timestamped backup copies of files and directories.
 
 ## installation
 
-Download or clone the repository and execute the install script `.install.sh`.
+Download or clone the repository and execute the install script `./install.sh`.
 This installs `baku` and its man page.
 
 ## usage
