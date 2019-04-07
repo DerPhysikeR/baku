@@ -79,9 +79,9 @@ do
 
     if [ $dryrun = true ]
     then
-        echo "cp ${cpoptions} ${target} ${target}.${suffix}"
+        echo "cp ${cpoptions} ${1} ${target}.${suffix}"
     else
-        cp ${cpoptions} ${target} ${target}.${suffix}
+        cp ${cpoptions} ${1} ${target}.${suffix}
     fi
     shift
 done
