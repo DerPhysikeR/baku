@@ -7,12 +7,12 @@ dryrun=false
 targetdir=""
 
 usage() {
-    echo "Usage: $0 [-h] [-d] [-v] [-V] [-i ISOFORMAT] [-f FORMAT] [-s SUFFIX] SRC"
+    echo "Usage: $0 [-h] [-V] [-v] [-d] [-t TARGET] [-i ISOFORMAT] [-f FORMAT] [-s SUFFIX] SRC"
     echo "  -h  Help. Display this message and quit."
-    echo "  -d  Dry-run.  The cp command will only be echoed."
-    echo "  -v  Verbose. Pass '-v' option to 'cp'."
-    echo "  -t  Specify target directory."
     echo "  -V  Version. Print version number and quit."
+    echo "  -v  Verbose. Pass '-v' option to 'cp'."
+    echo "  -d  Dry-run. The cp command will only be echoed."
+    echo "  -t  Specify target directory."
     echo "  -i  Specify ISO time format passed to date; default is 'seconds'."
     echo "  -f  Specify time format passed to date."
     echo "  -s  Specify a different suffix for target."
@@ -25,7 +25,7 @@ usage() {
 
 # define how and if cp should be executed
 OPTIND=1
-optspec="hdvt:Vi:f:s:"
+optspec="hVvdt:i:f:s:"
 while getopts "$optspec" optchar
 do
     case "${optchar}" in
@@ -33,20 +33,20 @@ do
             usage
             exit
             ;;
-        d)
-            dryrun=true
+        V)
+            echo ${version}
+            exit
             ;;
         v)
             cpoptions="${cpoptions}v"
+            ;;
+        d)
+            dryrun=true
             ;;
         t)
             targetdir=${OPTARG}
             # just use the exit status of cp
             # [ -d "$targetdir" ] || exit 4
-            ;;
-        V)
-            echo ${version}
-            exit
             ;;
         i)
             suffix=$(date --iso-8601=${OPTARG}) || exit 3
@@ -91,7 +91,9 @@ done
 #  [x] called with no options
 #  [x] use it with *
 #  [ ] permissions?
-#  [ ] "baku ."
+#  [x] "baku ."
 #  [x] set target
 #  [x] catch possible errors in suffix generation
-#  [ ] order of options
+#  [x] order of options
+#  [x] remove trailing slash from target directory; according to POSIX standard,
+#      this is not necessary
